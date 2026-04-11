@@ -35,6 +35,7 @@ const DomoSchema = new mongoose.Schema({
 
 DomoSchema.statics.toAPI = (doc) => ({
     name: doc.name,
+    status: doc.status,
     age: doc.age,
 });
 

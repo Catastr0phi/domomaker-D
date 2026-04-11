@@ -20,6 +20,22 @@ const handleDomo = (e, onDomoAdded) => {
     return false;
 }
 
+const handleUpdate = (e, domoName, onDomoUpdated) => {
+    e.preventDefault();
+    helper.hideError();
+
+    const name = domoName;
+    const status = e.target.querySelector('#domoStatus').value;
+
+    if (!status) {
+        helper.handleError('New status required!');
+        return false;
+    }
+
+    helper.sendPost(e.target.action, {name, status}, onDomoUpdated);
+    return false;
+}
+
 const DomoForm = (props) => {
     return (
         <form id='domoForm'
@@ -65,8 +81,18 @@ const DomoList = (props) => {
             <div key={domo.id} className='domo'>
                 <img src='/assets/img/domoface.jpeg' alt='domo face' className='domoFace' />
                 <h3 className='domoName'>Name: {domo.name}</h3>
-                <h3 className='domoStatus'>Currently {domo.status}</h3>
                 <h3 className='domoAge'>Age: {domo.age}</h3>
+                <form id='statusForm'
+                onSubmit={(e) => handleUpdate(e, domo.name, props.triggerReload)}
+                name='statusForm'
+                action='/updateStatus'
+                method='POST'
+                className='statusForm'
+                >
+                    <input id="domoStatus" type='text' name='status' placeholder='Update status' />
+                    <input className='newStatusSubmit' type='submit' value='Update' />    
+                </form>
+                <h3 className='domoStatus'>Currently {domo.status}</h3>
             </div>
         );
     });
@@ -87,7 +113,7 @@ const App = () => {
                 <DomoForm triggerReload={() => setReloadDomos(!reloadDomos)} />
             </div>
             <div id='domos'>
-                <DomoList domos={[]} reloadDomos={reloadDomos} />
+                <DomoList domos={[]} reloadDomos={reloadDomos} triggerReload={() => setReloadDomos(!reloadDomos)} />
             </div>
         </div>
     );
