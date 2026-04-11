@@ -42,8 +42,28 @@ const getDomos = async (req, res) => {
     }
 };
 
+const updateStatus = async (req, res) => {
+    if (!req.body.status){
+        return res.status(400).json({error: 'New status required!'});
+    }
+    try {
+        const query = {owner: req.session.account._id, status: req.body.name};
+        const update = {status: req.body.status};
+
+        await Domo.findOneAndUpdate(query, update);
+
+        // findOneAndUpdate returns the data BEFORE the update, so doc must be gotten seperately after
+        const doc = Domo.findOne(query);
+        return res.status(201).json(doc);
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({error: 'Error updating status!'});
+    }
+}
+
 module.exports = {
     makerPage,
     makeDomo,
     getDomos,
+    updateStatus,
 }
