@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const _ = require('underscore');
 
 const setName = (name) => _.escape(name).trim();
+const setStatus = (status) => _.escape(status).trim();
 
 const DomoSchema = new mongoose.Schema({
     name: {
@@ -9,6 +10,12 @@ const DomoSchema = new mongoose.Schema({
         required: true,
         trim: true,
         set: setName,
+    },
+    status: {
+        type: String,
+        required: true,
+        trim: true,
+        set: setStatus,
     },
     age: {
         type: Number,
